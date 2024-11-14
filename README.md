@@ -1,36 +1,97 @@
 # Training XLM-RoBERTa with Hugging Face on Google Colab
 
-This repository contains a Jupyter notebook that demonstrates how to fine-tune the XLM-RoBERTa model for Named Entity Recognition (NER) using the Hugging Face Transformers library. The notebook uses the CoNLL-2003 dataset and trains the model on Google Colab.
+This repository contains code for fine-tuning XLM-RoBERTa for Named Entity Recognition (NER) using the Hugging Face Transformers library. The implementation is specifically designed to run on Google Colab.
 
-## Table of Contents
-1. [Introduction](#introduction)
-2. [Setup](#setup)
-3. [Dataset Preparation](#dataset-preparation)
-4. [Model Initialization and Training](#model-initialization-and-training)
-5. [Model Evaluation](#model-evaluation)
-6. [Saving and Loading the Model](#saving-and-loading-the-model)
-7. [Example Usage](#example-usage)
+## Overview
 
-## Introduction
-Named Entity Recognition (NER) is a fundamental task in Natural Language Processing (NLP) that aims to identify and classify named entities (such as people, organizations, locations, etc.) within a given text. This notebook demonstrates how to fine-tune the XLM-RoBERTa model, a powerful multilingual language model, for NER using the Hugging Face Transformers library.
+This project demonstrates how to:
+- Fine-tune XLM-RoBERTa on the CoNLL-2003 dataset for NER
+- Process and tokenize text data for NER tasks
+- Implement custom evaluation metrics
+- Save and load the trained model
+- Perform inference on new text
 
-## Setup
-The notebook starts by installing the required dependencies, including `datasets`, `seqeval`, and `evaluate`.
+## Requirements
 
-## Dataset Preparation
-The notebook uses the CoNLL-2003 dataset, which is loaded using the `datasets` library. The dataset is then tokenized and aligned with the NER labels using the XLM-RoBERTa tokenizer.
+The following packages are required:
+```bash
+pip install transformers
+pip install datasets
+pip install seqeval
+pip install evaluate
+pip install torch
+```
 
-## Model Initialization and Training
-The XLM-RoBERTa model is initialized with the pre-trained weights, and the number of labels is set based on the dataset. The model is then fine-tuned using the Hugging Face Trainer API, with customizable training arguments.
+## Dataset
 
-## Model Evaluation
-The notebook defines a custom `compute_metrics` function to evaluate the model's performance on the validation dataset using the `seqeval` metric.
+The project uses the CoNLL-2003 dataset, which is automatically downloaded through the Hugging Face datasets library. The dataset contains text annotated with the following entity types:
+- PER (Person)
+- ORG (Organization)
+- LOC (Location)
+- MISC (Miscellaneous)
 
-## Saving and Loading the Model
-After training, the model and tokenizer are saved to disk for future use. The notebook also demonstrates how to load the saved model and tokenizer.
+## Model Architecture
 
-## Example Usage
-The final section of the notebook provides an example of how to use the fine-tuned model to perform Named Entity Recognition on a given input text.
+- Base Model: `xlm-roberta-base`
+- Task: Token Classification (NER)
+- Training Framework: Hugging Face Transformers
+
+## Training
+
+The training process includes:
+- Custom tokenization with label alignment
+- Evaluation metrics calculation (Precision, Recall, F1-score)
+- Training arguments optimization
+- Model checkpointing
+
+Key training parameters:
+```python
+learning_rate=2e-5
+per_device_train_batch_size=16
+num_train_epochs=1
+weight_decay=0.01
+```
+
+## Usage
+
+1. Open the `xlm_hf.ipynb` notebook in Google Colab
+2. Run the installation cells to set up the required packages
+3. Execute the training cells to fine-tune the model
+4. Use the inference code to make predictions on new text
+
+Example inference:
+```python
+text = "Your text here"
+result = perform_ner(text, loaded_model, loaded_tokenizer, id2label)
+print(result)
+```
+
+## Model Outputs
+
+The model returns predictions in JSON format:
+```json
+{
+  "ENTITY_TYPE": [
+    {
+      "token": "word",
+      "label": "B-ENTITY_TYPE",
+      "confidence": "95.67%"
+    }
+  ]
+}
+```
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+
+## Acknowledgments
+
+- Hugging Face for their Transformers library
+- The XLM-RoBERTa team for the pre-trained model
+- CoNLL-2003 dataset creators
 
 ## Contributing
-If you find any issues or have suggestions for improvements, please feel free to open an issue or submit a pull request.
+
+Contributions are welcome! Please feel free to submit a Pull Request.
